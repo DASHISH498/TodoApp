@@ -8,7 +8,12 @@ import TaskList from "./components/TaskList";
 import { initialTasks } from "./data/initialTasks";
 
 function App() {
-  const [tasks, setTasks] = useState(initialTasks);
+  const [tasks, setTasks] = useState(
+    initialTasks.map((task) => ({
+      ...task,
+      completed: false,
+    })),
+  );
 
   const handleDeleteTask = (taskId: number) => {
     setTasks((taskVal) => taskVal.filter((task) => task.id !== taskId));
@@ -44,18 +49,37 @@ function App() {
     setTasks([newTask, ...tasks]);
   };
 
+  const handleToggleTask = (taskId: number) => {
+    setTasks(
+      tasks.map((task) =>
+        task.id === taskId ? { ...task, completed: !task.completed } : task,
+      ),
+    );
+  };
+
+  const [filteredTasks, setFilteredTasks] = useState(tasks);
+const [searchText, setSearchText] = useState("");
+
+  const filteredTasksBySearch = filteredTasks.filter((task) =>
+    task.title.toLowerCase().includes(searchText.toLowerCase()),
+  );
+
   return (
     <div className="min-h-screen bg-[#111111] flex text-white">
       <Sidebar></Sidebar>
       <main className="flex-1 p-4">
-        <Header></Header>
-        <Stats></Stats>
+        <Header searchText={searchText} onSearchChange={setSearchText}></Header>
+        <Stats tasks={tasks}></Stats>
         <AddTask onAddTask={handleAddTask}></AddTask>
-        <TaskFilterTabs></TaskFilterTabs>
-        <TaskList
+        <TaskFilterTabs
           tasks={tasks}
+          onFilterChange={setFilteredTasks}
+        ></TaskFilterTabs>
+        <TaskList
+          tasks={filteredTasksBySearch}
           onDeleteTask={handleDeleteTask}
           onUpdateTask={handleUpdateTask}
+          onToggleTask={handleToggleTask}
         ></TaskList>
       </main>
     </div>

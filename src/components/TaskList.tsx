@@ -1,18 +1,15 @@
-import { SquarePen, Trash2 } from "lucide-react";
+import { SquarePen, Trash2, CheckCircle } from "lucide-react";
 import { initialTasks } from "../data/initialTasks";
 import { useState } from "react";
 
 type TaskListProps = {
   tasks: typeof initialTasks;
   onDeleteTask: (taskId: number) => void;
-  onUpdateTask: (
-    taskId: number,
-    newTitle: string,
-    newDescription: string,
-  ) => void;
+  onToggleTask: (taskId: number) => void;
+  onUpdateTask: (taskId: number, newTitle: string, newDescription: string) => void;
 };
 
-function TaskList({ tasks, onDeleteTask, onUpdateTask }: TaskListProps) {
+function TaskList({tasks, onDeleteTask, onToggleTask, onUpdateTask}: TaskListProps) {
   const [editingTask, setEditingTask] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -23,17 +20,9 @@ function TaskList({ tasks, onDeleteTask, onUpdateTask }: TaskListProps) {
         {tasks.map((task) => (
           <li
             key={task.id}
-            className="flex items-center justify-between border-t border-gray-700 py-3"
+            className="flex items-center justify-between border-t border-gray-700 py-3 px-3"
           >
             <div className="left w-full flex items-center gap-4">
-              <input
-                type="checkbox"
-                className="appearance-none w-4 h-4 rounded-[4px] border-2 border-gray-500 cursor-pointer
-                bg-transparent bg-center bg-no-repeat bg-[length:100%]
-                checked:bg-blue-600 checked:border-blue-600
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50
-                transition-colors"
-              />
 
               <div className="grid">
                 <h2>{task.title}</h2>
@@ -56,6 +45,13 @@ function TaskList({ tasks, onDeleteTask, onUpdateTask }: TaskListProps) {
                 className="p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
               >
                 <SquarePen size={20} />
+              </button>
+
+              <button
+              onClick={() => onToggleTask(task.id)}
+                className="p-2 rounded-md text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+              >
+                <CheckCircle size={18} />
               </button>
 
               <button
