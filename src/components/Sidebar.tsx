@@ -1,4 +1,16 @@
-const Sidebar = () => {
+type SidebarProps = {
+  activeView: string;
+  onViewChange: (view: string) => void;
+}
+
+const Sidebar = ({activeView, onViewChange}: SidebarProps) => {
+
+  const navClass = (view: string) =>
+    `w-full h-[34px] flex items-center gap-2.5 px-2 rounded-md text-[13px] text-left cursor-pointer ${
+      activeView === view
+        ? "bg-[#005bc7] text-white"
+        : "text-[#d0d0d0] hover:bg-[#222]"
+    }`;
   return (
     <aside className="relative w-[250px] min-h-screen bg-[#171717] border-r border-[#292929] px-3.5 py-5 flex flex-col">
       {/* LOGO */}
@@ -16,17 +28,17 @@ const Sidebar = () => {
           Views
         </p>
 
-        <button className="w-full h-[34px] flex items-center gap-2.5 px-2 rounded-md bg-[#005bc7] text-white text-[13px] text-left">
+        <button onClick={() => onViewChange("All Tasks")} className={navClass("All Tasks")}>
           <span>▣</span>
           <span>All tasks</span>
         </button>
 
-        <button className="w-full h-[34px] flex items-center gap-2.5 px-2 rounded-md text-[#d0d0d0] hover:bg-[#222] text-[13px] text-left">
+        <button onClick={() => onViewChange("Today")} className={navClass("All Today")}>
           <span>▣</span>
           <span>Today</span>
         </button>
 
-        <button className="w-full h-[34px] flex items-center gap-2.5 px-2 rounded-md text-[#d0d0d0] hover:bg-[#222] text-[13px] text-left">
+        <button onClick={() => onViewChange("Important")} className={navClass("All Important")}>
           <span>☆</span>
           <span>Important</span>
         </button>

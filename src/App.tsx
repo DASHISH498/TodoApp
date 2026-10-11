@@ -6,8 +6,11 @@ import Stats from "./components/Stats";
 import TaskFilterTabs from "./components/TaskFilterTabs";
 import TaskList from "./components/TaskList";
 import { initialTasks } from "./data/initialTasks";
+import TodayPage from "./components/TodayPage";
 
 function App() {
+  const [activeView, setActiveView] = useState("All Task");
+
   const [tasks, setTasks] = useState(
     initialTasks.map((task) => ({
       ...task,
@@ -58,16 +61,28 @@ function App() {
   };
 
   const [filteredTasks, setFilteredTasks] = useState(tasks);
-const [searchText, setSearchText] = useState("");
+
+  const [searchText, setSearchText] = useState("");
 
   const filteredTasksBySearch = filteredTasks.filter((task) =>
     task.title.toLowerCase().includes(searchText.toLowerCase()),
   );
 
+  const visibleTasks =  activeView === "Today" ? [] : filteredTasksBySearch;
+
   return (
     <div className="min-h-screen bg-[#111111] flex text-white">
-      <Sidebar></Sidebar>
-      <main className="flex-1 p-4">
+      <Sidebar activeView={activeView} onViewChange={setActiveView}></Sidebar>
+      {activeView === "Today" ? (
+        <TodayPage
+          tasks={tasks}
+          onAddTask={handleAddTask}
+          onDeleteTask={handleDeleteTask}
+          onUpdateTask={handleUpdateTask}
+          onToggleTask={handleToggleTask}
+        ></TodayPage>
+      ) : (
+        <main className="flex-1 p-4 h-[calc(100vh-0px)] overflow-y-auto [scrollbar-width:thin] [scrollbar-color:#444_transparent]">
         <Header searchText={searchText} onSearchChange={setSearchText}></Header>
         <Stats tasks={tasks}></Stats>
         <AddTask onAddTask={handleAddTask}></AddTask>
@@ -76,12 +91,13 @@ const [searchText, setSearchText] = useState("");
           onFilterChange={setFilteredTasks}
         ></TaskFilterTabs>
         <TaskList
-          tasks={filteredTasksBySearch}
+          tasks={visibleTasks}
           onDeleteTask={handleDeleteTask}
           onUpdateTask={handleUpdateTask}
           onToggleTask={handleToggleTask}
         ></TaskList>
       </main>
+      )}
     </div>
   );
 }

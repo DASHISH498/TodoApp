@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Task = {
   id: number;
@@ -31,6 +31,16 @@ function TaskFilterTabs({
 
     onFilterChange(filteredTasks);
   };
+
+  useEffect(() => {
+  const filteredTasks = tasks.filter((task) => {
+    if (activeTab === "Pending") return !task.completed;
+    if (activeTab === "Completed") return task.completed;
+    return true;
+  });
+
+  onFilterChange(filteredTasks);
+}, [tasks, activeTab]);
 
   const tabs = ["All", "Pending", "Completed"];
 

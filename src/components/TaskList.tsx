@@ -15,7 +15,7 @@ function TaskList({tasks, onDeleteTask, onToggleTask, onUpdateTask}: TaskListPro
   const [description, setDescription] = useState("");
 
   return (
-    <div className="mt-3 h-[calc(100vh-316px)] overflow-y-auto [scrollbar-width:thin] [scrollbar-color:#444_transparent]">
+    <div className="mt-3">
       <ul>
         {tasks.map((task) => (
           <li
